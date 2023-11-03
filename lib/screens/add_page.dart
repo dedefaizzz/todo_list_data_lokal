@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+// berkaitan dengan event handling
+TextEditingController titleController = TextEditingController();
+TextEditingController descriptionController = TextEditingController();
+
 class AddTodoPage extends StatelessWidget {
   const AddTodoPage({super.key});
 
@@ -13,10 +17,12 @@ class AddTodoPage extends StatelessWidget {
         padding: EdgeInsets.all(20),
         children: [
           TextField(
+            controller: titleController,
             decoration: InputDecoration(hintText: 'Title'),
           ),
           SizedBox(height: 20),
           TextField(
+            controller: descriptionController,
             decoration: InputDecoration(hintText: 'Description'),
             keyboardType: TextInputType.multiline,
             minLines: 1,
@@ -33,5 +39,10 @@ class AddTodoPage extends StatelessWidget {
   }
 
   // Form handling
-  void submitData() {}
+  void submitData() {
+    // get data dari form
+
+    // submit data ke server
+    // tampilkan status sukses / gagal
+  }
 }
