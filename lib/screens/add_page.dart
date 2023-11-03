@@ -49,10 +49,13 @@ class AddTodoPage extends StatelessWidget {
       "description": description,
       "is_completed": false,
     };
+
     // submit data ke server
     final url = 'https://api.nstack.in/v1/todos';
     final uri = Uri.parse(url);
-    final response = await http.post(uri);
+    final response = await http.post(uri, body: body);
+
     // tampilkan status sukses / gagal
+    print(response);
   }
 }
