@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/constants/colors.dart';
-import 'package:todo_list/widgets/todo_item.dart';
+import 'package:todo_list/screens/add_page.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class ToDoListPage extends StatelessWidget {
+  const ToDoListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
                 children: [
                   Container(
                     margin: EdgeInsets.only(
-                      top: 50,
+                      top: 25,
                       bottom: 20,
                     ),
                     child: Text(
@@ -31,14 +31,26 @@ class Home extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ToDoItem(),
                 ],
               ),
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          NavigateToAddPage(context);
+        },
+        label: Text('Add Todo'),
+      ),
     );
+  }
+
+  void NavigateToAddPage(BuildContext context) {
+    final route = MaterialPageRoute(
+      builder: (context) => AddTodoPage(),
+    );
+    Navigator.push(context, route);
   }
 
   AppBar _buildAppBar() {
@@ -52,6 +64,14 @@ class Home extends StatelessWidget {
             Icons.menu,
             color: tdBlack,
             size: 30,
+          ),
+          Text(
+            'My List',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: tdBlack,
+            ),
           ),
           Container(
             height: 40,
