@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,7 +33,7 @@ class AddTodoPage extends StatelessWidget {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: submitData,
             child: Text('Submit'),
           )
         ],
@@ -53,9 +55,19 @@ class AddTodoPage extends StatelessWidget {
     // submit data ke server
     final url = 'https://api.nstack.in/v1/todos';
     final uri = Uri.parse(url);
-    final response = await http.post(uri, body: body);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
 
-    // tampilkan status sukses / gagal
-    print(response);
+    // tampilkan status sukses / gagal di dalam debug
+    if (response.statusCode == 201) {
+      print('success');
+    } else {
+      print('failed');
+    }
   }
+
+  // API response reaction
 }
