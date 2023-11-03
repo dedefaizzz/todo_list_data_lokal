@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 // berkaitan dengan event handling
 TextEditingController titleController = TextEditingController();
@@ -39,7 +40,7 @@ class AddTodoPage extends StatelessWidget {
   }
 
   // Form handling
-  void submitData() {
+  Future<void> submitData() async {
     // get data dari form
     final title = titleController.text;
     final description = descriptionController.text;
@@ -49,6 +50,9 @@ class AddTodoPage extends StatelessWidget {
       "is_completed": false,
     };
     // submit data ke server
+    final url = 'https://api.nstack.in/v1/todos';
+    final uri = Uri.parse(url);
+    final response = await http.post(uri);
     // tampilkan status sukses / gagal
   }
 }
