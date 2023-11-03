@@ -41,7 +41,13 @@ class AddTodoPage extends StatelessWidget {
   // Form handling
   void submitData() {
     // get data dari form
-
+    final title = titleController.text;
+    final description = descriptionController.text;
+    final body = {
+      "title": title,
+      "description": description,
+      "is_completed": false,
+    };
     // submit data ke server
     // tampilkan status sukses / gagal
   }
