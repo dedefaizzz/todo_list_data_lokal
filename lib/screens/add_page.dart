@@ -69,8 +69,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
     // tampilkan status sukses / gagal di dalam debug
     if (response.statusCode == 201) {
-      // titleController.text = '';
-      // descriptionController.text = '';
+      titleController.text = '';
+      descriptionController.text = '';
       showSuccessMessage('Todo Telah Ditambahkan');
     } else {
       showErrorMessage('Todo Gagal Ditambahkan');

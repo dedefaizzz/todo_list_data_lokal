@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/screens/add_page.dart';
+import 'package:http/http.dart' as http;
 
 class ToDoListPage extends StatefulWidget {
   const ToDoListPage({super.key});
@@ -10,6 +13,14 @@ class ToDoListPage extends StatefulWidget {
 }
 
 class _ToDoListPageState extends State<ToDoListPage> {
+  List items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTodo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,12 +32,13 @@ class _ToDoListPageState extends State<ToDoListPage> {
           children: [
             SearchBox(),
             Expanded(
-              child: ListView(
+              child: Row(
                 children: [
                   Container(
                     margin: EdgeInsets.only(
-                      top: 25,
+                      top: 30,
                       bottom: 20,
+                      left: 5,
                     ),
                     child: Text(
                       'All My List',
@@ -39,6 +51,40 @@ class _ToDoListPageState extends State<ToDoListPage> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 590,
+              child: RefreshIndicator(
+                onRefresh: fetchTodo,
+                child: ListView.builder(
+                  itemCount: items.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    final item = items[index] as Map;
+                    return ListTile(
+                      leading: CircleAvatar(
+                        child: Text(
+                          '${index + 1}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.lightBlue,
+                      ),
+                      title: Text(
+                        item['title'],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
+                      ),
+                      subtitle: Text(
+                        item['description'],
+                        style: TextStyle(
+                            fontSize: 15, fontStyle: FontStyle.italic),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -49,6 +95,22 @@ class _ToDoListPageState extends State<ToDoListPage> {
         label: Text('Add Todo'),
       ),
     );
+  }
+
+  // API get data
+  Future<void> fetchTodo() async {
+    final url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+
+    // menampilkan data
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body) as Map;
+      final result = json['items'] as List;
+      setState(() {
+        items = result;
+      });
+    } else {}
   }
 
   void NavigateToAddPage(BuildContext context) {
