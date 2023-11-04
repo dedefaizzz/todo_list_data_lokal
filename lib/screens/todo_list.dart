@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/screens/add_page.dart';
 
-class ToDoListPage extends StatelessWidget {
+class ToDoListPage extends StatefulWidget {
   const ToDoListPage({super.key});
 
+  @override
+  State<ToDoListPage> createState() => _ToDoListPageState();
+}
+
+class _ToDoListPageState extends State<ToDoListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
