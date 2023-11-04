@@ -13,6 +13,7 @@ class ToDoListPage extends StatefulWidget {
 }
 
 class _ToDoListPageState extends State<ToDoListPage> {
+  bool isLoading = true;
   List items = [];
 
   @override
@@ -99,6 +100,9 @@ class _ToDoListPageState extends State<ToDoListPage> {
 
   // API get data
   Future<void> fetchTodo() async {
+    setState(() {
+      isLoading = false;
+    });
     final url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
@@ -110,7 +114,11 @@ class _ToDoListPageState extends State<ToDoListPage> {
       setState(() {
         items = result;
       });
-    } else {}
+    }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void NavigateToAddPage(BuildContext context) {
