@@ -100,9 +100,6 @@ class _ToDoListPageState extends State<ToDoListPage> {
 
   // API get data
   Future<void> fetchTodo() async {
-    setState(() {
-      isLoading = false;
-    });
     final url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
