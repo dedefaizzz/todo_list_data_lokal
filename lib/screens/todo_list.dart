@@ -61,6 +61,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
                     final item = items[index] as Map;
+                    final id = item['_id'] as String;
                     return ListTile(
                       leading: CircleAvatar(
                         child: Text(
@@ -87,6 +88,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
                             // Membuka Edit Page
                           } else if (value == 'delete') {
                             // Menghapus item
+                            deleteById(id);
                           }
                         },
                         itemBuilder: (context) {
@@ -146,6 +148,24 @@ class _ToDoListPageState extends State<ToDoListPage> {
     Navigator.push(context, route);
   }
 
+  // API untuk Delete
+  Future<void> deleteById(String id) async {
+    // Hapus item
+    final url = 'https://api.nstack.in/v1/todos/$id';
+    final uri = Uri.parse(url);
+    final response = await http.delete(uri);
+    if (response.statusCode == 200) {
+      // Hapus item dari list
+      final filtered = items.where((element) => element['_id'] != id).toList();
+      setState(() {
+        items = filtered;
+      });
+    } else {
+      // Menampilkan error
+      showErrorMessage('Gagal Menghapus');
+    }
+  }
+
   AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: tdBgColor,
@@ -177,6 +197,18 @@ class _ToDoListPageState extends State<ToDoListPage> {
         ],
       ),
     );
+  }
+
+  // API response reaction
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(color: tdBgColor),
+      ),
+      backgroundColor: tdRed,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
