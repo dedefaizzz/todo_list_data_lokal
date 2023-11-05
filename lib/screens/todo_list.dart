@@ -32,28 +32,26 @@ class _ToDoListPageState extends State<ToDoListPage> {
         child: Column(
           children: [
             SearchBox(),
-            Expanded(
-              child: Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 30,
-                      bottom: 20,
-                      left: 5,
-                    ),
-                    child: Text(
-                      'All My List',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 30,
+                    bottom: 20,
+                    left: 5,
+                  ),
+                  child: Text(
+                    'All My List',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             SizedBox(
-              height: 590,
+              height: 540,
               child: RefreshIndicator(
                 onRefresh: fetchTodo,
                 child: ListView.builder(
@@ -86,6 +84,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
                         onSelected: (value) {
                           if (value == 'edit') {
                             // Membuka Edit Page
+                            NavigateToEditPage(item);
                           } else if (value == 'delete') {
                             // Menghapus item
                             deleteById(id);
@@ -141,9 +140,21 @@ class _ToDoListPageState extends State<ToDoListPage> {
     });
   }
 
-  void NavigateToAddPage(BuildContext context) {
+  // setelah ditambahkan item maka dapat me refresh (langsung memunculkan item) ke add page
+  Future<void> NavigateToAddPage(BuildContext context) async {
     final route = MaterialPageRoute(
       builder: (context) => AddTodoPage(),
+    );
+    await Navigator.push(context, route);
+    setState(() {
+      isLoading = true;
+    });
+    fetchTodo();
+  }
+
+  void NavigateToEditPage(Map item) {
+    final route = MaterialPageRoute(
+      builder: (context) => AddTodoPage(todo: item), // passing data ke edit
     );
     Navigator.push(context, route);
   }
