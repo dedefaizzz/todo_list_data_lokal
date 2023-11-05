@@ -152,11 +152,15 @@ class _ToDoListPageState extends State<ToDoListPage> {
     fetchTodo();
   }
 
-  void NavigateToEditPage(Map item) {
+  Future<void> NavigateToEditPage(Map item) async {
     final route = MaterialPageRoute(
       builder: (context) => AddTodoPage(todo: item), // passing data ke edit
     );
-    Navigator.push(context, route);
+    await Navigator.push(context, route);
+    setState(() {
+      isLoading = true;
+    });
+    fetchTodo();
   }
 
   // API untuk Delete
