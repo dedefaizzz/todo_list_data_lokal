@@ -81,6 +81,27 @@ class _ToDoListPageState extends State<ToDoListPage> {
                         style: TextStyle(
                             fontSize: 15, fontStyle: FontStyle.italic),
                       ),
+                      trailing: PopupMenuButton(
+                        onSelected: (value) {
+                          if (value == 'edit') {
+                            // Membuka Edit Page
+                          } else if (value == 'delete') {
+                            // Menghapus item
+                          }
+                        },
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: Text('Edit'),
+                              value: 'edit',
+                            ),
+                            PopupMenuItem(
+                              child: Text('Delete'),
+                              value: 'delete',
+                            ),
+                          ];
+                        },
+                      ),
                     );
                   },
                 ),
