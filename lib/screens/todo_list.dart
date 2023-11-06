@@ -3,6 +3,7 @@ import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/screens/add_page.dart';
 import 'package:todo_list/services/todo_service.dart';
 import 'package:todo_list/utils/snackBar_helper.dart';
+import 'package:todo_list/widget/todo_card.dart';
 
 class ToDoListPage extends StatefulWidget {
   const ToDoListPage({super.key});
@@ -67,53 +68,11 @@ class _ToDoListPageState extends State<ToDoListPage> {
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       final item = items[index] as Map;
-                      final id = item['_id'] as String;
-                      return Card(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: Text(
-                              '${index + 1}',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            backgroundColor: Colors.lightBlue,
-                          ),
-                          title: Text(
-                            item['title'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                            ),
-                          ),
-                          subtitle: Text(
-                            item['description'],
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          ),
-                          trailing: PopupMenuButton(
-                            onSelected: (value) {
-                              if (value == 'edit') {
-                                // Membuka Edit Page
-                                NavigateToEditPage(item);
-                              } else if (value == 'delete') {
-                                // Menghapus item
-                                deleteById(id);
-                              }
-                            },
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  child: Text('Edit'),
-                                  value: 'edit',
-                                ),
-                                PopupMenuItem(
-                                  child: Text('Delete'),
-                                  value: 'delete',
-                                ),
-                              ];
-                            },
-                          ),
-                        ),
-                      );
+                      return TodoCard(
+                          index: index,
+                          item: item,
+                          navigateEdit: NavigateToEditPage,
+                          deleteById: deleteById);
                     },
                   ),
                 ),
