@@ -14,3 +14,18 @@ void showErrorMessage(
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+
+// API response reaction
+void showSuccessMessage(
+  BuildContext context, {
+  required String message,
+}) {
+  final snackBar = SnackBar(
+    content: Text(
+      message,
+      style: TextStyle(color: tdBgColor),
+    ),
+    backgroundColor: tdBlue,
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}

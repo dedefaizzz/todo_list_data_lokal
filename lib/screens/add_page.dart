@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/services/todo_service.dart';
+import 'package:todo_list/utils/snackBar_helper.dart';
 
 class AddTodoPage extends StatefulWidget {
   final Map? todo;
@@ -84,75 +81,41 @@ class _AddTodoPageState extends State<AddTodoPage> {
       return;
     }
     final id = todo['_id'];
-    final title = titleController.text;
-    final description = descriptionController.text;
-    final body = {
-      "title": title,
-      "description": description,
-      "is_completed": false,
-    };
 
     // update data ke server
     final isSuccess = await TodoService.updateTodo(id, body);
 
     // tampilkan status sukses / gagal di dalam debug
     if (isSuccess) {
-      showSuccessMessage('Todo Telah Diupdate');
+      showSuccessMessage(context, message: 'Todo Telah Diupdate');
     } else {
-      showErrorMessage('Todo Gagal Diupdate');
+      showErrorMessage(context, message: 'Todo Gagal Diupdate');
     }
   }
 
   // Form handling
   Future<void> submitData() async {
+    // submit data ke server
+    final isSuccess = await TodoService.addTodo(body);
+
+    // tampilkan status sukses / gagal di dalam debug
+    if (isSuccess) {
+      titleController.text = '';
+      descriptionController.text = '';
+      showSuccessMessage(context, message: 'Todo Telah Ditambahkan');
+    } else {
+      showErrorMessage(context, message: 'Todo Gagal Ditambahkan');
+    }
+  }
+
+  Map get body {
     // get data dari form
     final title = titleController.text;
     final description = descriptionController.text;
-    final body = {
+    return {
       "title": title,
       "description": description,
       "is_completed": false,
     };
-
-    // submit data ke server
-    final url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    // tampilkan status sukses / gagal di dalam debug
-    if (response.statusCode == 201) {
-      titleController.text = '';
-      descriptionController.text = '';
-      showSuccessMessage('Todo Telah Ditambahkan');
-    } else {
-      showErrorMessage('Todo Gagal Ditambahkan');
-    }
-  }
-
-  // API response reaction
-  void showSuccessMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: TextStyle(color: tdBgColor),
-      ),
-      backgroundColor: tdBlue,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void showErrorMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: TextStyle(color: tdBgColor),
-      ),
-      backgroundColor: tdRed,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
