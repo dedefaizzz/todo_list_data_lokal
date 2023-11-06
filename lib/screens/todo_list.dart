@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/screens/add_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_list/services/todo_service.dart';
 
 class ToDoListPage extends StatefulWidget {
   const ToDoListPage({super.key});
@@ -178,10 +179,8 @@ class _ToDoListPageState extends State<ToDoListPage> {
   // API untuk Delete
   Future<void> deleteById(String id) async {
     // Hapus item
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.delete(uri);
-    if (response.statusCode == 200) {
+    final isSuccess = await TodoService.deleteById(id);
+    if (isSuccess) {
       // Hapus item dari list
       final filtered = items.where((element) => element['_id'] != id).toList();
       setState(() {
