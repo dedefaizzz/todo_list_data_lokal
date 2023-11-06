@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/screens/add_page.dart';
-import 'package:http/http.dart' as http;
 import 'package:todo_list/services/todo_service.dart';
 
 class ToDoListPage extends StatefulWidget {
@@ -135,17 +132,15 @@ class _ToDoListPageState extends State<ToDoListPage> {
 
   // API get data
   Future<void> fetchTodo() async {
-    final url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
+    final response = await TodoService.fetchTodos();
 
     // menampilkan data
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as Map;
-      final result = json['items'] as List;
+    if (response != null) {
       setState(() {
-        items = result;
+        items = response;
       });
+    } else {
+      showErrorMessage('Sesuatu Terjadi Kesalahan');
     }
 
     setState(() {
