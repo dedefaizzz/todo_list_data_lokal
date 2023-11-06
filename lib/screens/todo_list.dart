@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/screens/add_page.dart';
 import 'package:todo_list/services/todo_service.dart';
+import 'package:todo_list/utils/snackBar_helper.dart';
 
 class ToDoListPage extends StatefulWidget {
   const ToDoListPage({super.key});
@@ -140,7 +141,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
         items = response;
       });
     } else {
-      showErrorMessage('Sesuatu Terjadi Kesalahan');
+      showErrorMessage(context, message: 'Sesuatu Terjadi Kesalahan');
     }
 
     setState(() {
@@ -183,7 +184,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
       });
     } else {
       // Menampilkan error
-      showErrorMessage('Gagal Menghapus');
+      showErrorMessage(context, message: 'Gagal Menghapus');
     }
   }
 
@@ -221,16 +222,6 @@ class _ToDoListPageState extends State<ToDoListPage> {
   }
 
   // API response reaction
-  void showErrorMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: TextStyle(color: tdBgColor),
-      ),
-      backgroundColor: tdRed,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
 }
 
 class SearchBox extends StatelessWidget {
