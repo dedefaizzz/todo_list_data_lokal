@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:todo_list/constants/colors.dart';
+import 'package:todo_list/services/todo_service.dart';
 
 class AddTodoPage extends StatefulWidget {
   final Map? todo;
@@ -92,16 +93,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
     };
 
     // update data ke server
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.put(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
+    final isSuccess = await TodoService.updateTodo(id, body);
 
     // tampilkan status sukses / gagal di dalam debug
-    if (response.statusCode == 200) {
+    if (isSuccess) {
       showSuccessMessage('Todo Telah Diupdate');
     } else {
       showErrorMessage('Todo Gagal Diupdate');
