@@ -64,52 +64,55 @@ class _ToDoListPageState extends State<ToDoListPage> {
                   ),
                   child: ListView.builder(
                     itemCount: items.length,
+                    padding: EdgeInsets.all(12),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       final item = items[index] as Map;
                       final id = item['_id'] as String;
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Text(
-                            '${index + 1}',
-                            style: TextStyle(color: Colors.white),
+                      return Card(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: Text(
+                              '${index + 1}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor: Colors.lightBlue,
                           ),
-                          backgroundColor: Colors.lightBlue,
-                        ),
-                        title: Text(
-                          item['title'],
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
+                          title: Text(
+                            item['title'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          item['description'],
-                          style: TextStyle(
-                              fontSize: 15, fontStyle: FontStyle.italic),
-                        ),
-                        trailing: PopupMenuButton(
-                          onSelected: (value) {
-                            if (value == 'edit') {
-                              // Membuka Edit Page
-                              NavigateToEditPage(item);
-                            } else if (value == 'delete') {
-                              // Menghapus item
-                              deleteById(id);
-                            }
-                          },
-                          itemBuilder: (context) {
-                            return [
-                              PopupMenuItem(
-                                child: Text('Edit'),
-                                value: 'edit',
-                              ),
-                              PopupMenuItem(
-                                child: Text('Delete'),
-                                value: 'delete',
-                              ),
-                            ];
-                          },
+                          subtitle: Text(
+                            item['description'],
+                            style: TextStyle(
+                                fontSize: 15, fontStyle: FontStyle.italic),
+                          ),
+                          trailing: PopupMenuButton(
+                            onSelected: (value) {
+                              if (value == 'edit') {
+                                // Membuka Edit Page
+                                NavigateToEditPage(item);
+                              } else if (value == 'delete') {
+                                // Menghapus item
+                                deleteById(id);
+                              }
+                            },
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(
+                                  child: Text('Edit'),
+                                  value: 'edit',
+                                ),
+                                PopupMenuItem(
+                                  child: Text('Delete'),
+                                  value: 'delete',
+                                ),
+                              ];
+                            },
+                          ),
                         ),
                       );
                     },
