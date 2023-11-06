@@ -54,57 +54,66 @@ class _ToDoListPageState extends State<ToDoListPage> {
               height: 540,
               child: RefreshIndicator(
                 onRefresh: fetchTodo,
-                child: ListView.builder(
-                  itemCount: items.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    final item = items[index] as Map;
-                    final id = item['_id'] as String;
-                    return ListTile(
-                      leading: CircleAvatar(
-                        child: Text(
-                          '${index + 1}',
-                          style: TextStyle(color: Colors.white),
+                child: Visibility(
+                  visible: items.isNotEmpty,
+                  replacement: Center(
+                    child: Text(
+                      'Todo List Kosong',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                  child: ListView.builder(
+                    itemCount: items.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      final item = items[index] as Map;
+                      final id = item['_id'] as String;
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Text(
+                            '${index + 1}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.lightBlue,
                         ),
-                        backgroundColor: Colors.lightBlue,
-                      ),
-                      title: Text(
-                        item['title'],
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
+                        title: Text(
+                          item['title'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        item['description'],
-                        style: TextStyle(
-                            fontSize: 15, fontStyle: FontStyle.italic),
-                      ),
-                      trailing: PopupMenuButton(
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            // Membuka Edit Page
-                            NavigateToEditPage(item);
-                          } else if (value == 'delete') {
-                            // Menghapus item
-                            deleteById(id);
-                          }
-                        },
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem(
-                              child: Text('Edit'),
-                              value: 'edit',
-                            ),
-                            PopupMenuItem(
-                              child: Text('Delete'),
-                              value: 'delete',
-                            ),
-                          ];
-                        },
-                      ),
-                    );
-                  },
+                        subtitle: Text(
+                          item['description'],
+                          style: TextStyle(
+                              fontSize: 15, fontStyle: FontStyle.italic),
+                        ),
+                        trailing: PopupMenuButton(
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              // Membuka Edit Page
+                              NavigateToEditPage(item);
+                            } else if (value == 'delete') {
+                              // Menghapus item
+                              deleteById(id);
+                            }
+                          },
+                          itemBuilder: (context) {
+                            return [
+                              PopupMenuItem(
+                                child: Text('Edit'),
+                                value: 'edit',
+                              ),
+                              PopupMenuItem(
+                                child: Text('Delete'),
+                                value: 'delete',
+                              ),
+                            ];
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
