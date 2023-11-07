@@ -19,7 +19,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   TextEditingController descriptionController = TextEditingController();
   bool isEdit = false;
 
-  // alur logika utk edit
+  // alur edit data
   @override
   void initState() {
     super.initState();
@@ -27,7 +27,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     if (todo != null) {
       isEdit = true;
 
-      // isi ulang item
+      // isi ulang item (item sebelum di edit dpt muncul)
       final title = todo['title'];
       final description = todo['description'];
       titleController.text = title;
@@ -40,6 +40,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
+          // ternary - disini popup menu hny utk edit
           isEdit ? 'EditTodo' : 'Add Todo',
         ),
       ),
@@ -73,6 +74,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     );
   }
 
+  // proses edit / update data
   Future<void> updateData() async {
     // put data dari form
     final todo = widget.todo;
@@ -93,7 +95,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
     }
   }
 
-  // Form handling
   Future<void> submitData() async {
     // submit data ke server
     final isSuccess = await TodoService.addTodo(body);
