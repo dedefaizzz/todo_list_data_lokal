@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list/constants/colors.dart';
 import 'package:todo_list/screens/add_page.dart';
@@ -6,7 +7,11 @@ import 'package:todo_list/utils/snackBar_helper.dart';
 import 'package:todo_list/widget/todo_card.dart';
 
 class ToDoListPage extends StatefulWidget {
-  const ToDoListPage({super.key});
+  final Map? todo;
+  const ToDoListPage({
+    super.key,
+    this.todo,
+  });
 
   @override
   State<ToDoListPage> createState() => _ToDoListPageState();
@@ -16,14 +21,27 @@ class _ToDoListPageState extends State<ToDoListPage> {
   bool isLoading = true;
   List items = [];
 
+  TextEditingController searchController = TextEditingController();
+  bool isSearch = false;
+  String searchText = '';
+
   @override
   void initState() {
     super.initState();
+    searchController.text = '';
     fetchTodo();
   }
 
   @override
   Widget build(BuildContext context) {
+    List filteredItems = items
+        .where((item) =>
+            item['title'].toLowerCase().contains(searchText.toLowerCase()) ||
+            item['description']
+                .toLowerCase()
+                .contains(searchText.toLowerCase()))
+        .toList();
+
     return Scaffold(
       backgroundColor: tdBgColor,
       appBar: _buildAppBar(),
@@ -31,7 +49,37 @@ class _ToDoListPageState extends State<ToDoListPage> {
         padding: EdgeInsets.all(15),
         child: Column(
           children: [
-            SearchBox(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextField(
+                controller: searchController,
+                onChanged: (value) {
+                  setState(() {
+                    // memproses pencarian
+                    searchText = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(0),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: tdBlack,
+                    size: 20,
+                  ),
+                  prefixIconConstraints: BoxConstraints(
+                    maxHeight: 20,
+                    maxWidth: 25,
+                  ),
+                  border: InputBorder.none,
+                  hintText: 'Search',
+                  hintStyle: TextStyle(color: tdGrey),
+                ),
+              ),
+            ),
             Row(
               children: [
                 Container(
@@ -51,11 +99,11 @@ class _ToDoListPageState extends State<ToDoListPage> {
               ],
             ),
             SizedBox(
-              height: 540,
+              height: 540, // 540 - 227 = 313
               child: RefreshIndicator(
                 onRefresh: fetchTodo,
                 child: Visibility(
-                  visible: items.isNotEmpty,
+                  visible: filteredItems.isNotEmpty,
                   replacement: Center(
                     child: Text(
                       'Todo List Kosong',
@@ -63,11 +111,11 @@ class _ToDoListPageState extends State<ToDoListPage> {
                     ),
                   ),
                   child: ListView.builder(
-                    itemCount: items.length,
+                    itemCount: filteredItems.length,
                     padding: EdgeInsets.all(12),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
-                      final item = items[index] as Map;
+                      final item = filteredItems[index] as Map;
                       return TodoCard(
                           index: index,
                           item: item,
@@ -176,42 +224,6 @@ class _ToDoListPageState extends State<ToDoListPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // API response reaction
-}
-
-class SearchBox extends StatelessWidget {
-  const SearchBox({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const TextField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(0),
-          prefixIcon: Icon(
-            Icons.search,
-            color: tdBlack,
-            size: 20,
-          ),
-          prefixIconConstraints: BoxConstraints(
-            maxHeight: 20,
-            maxWidth: 25,
-          ),
-          border: InputBorder.none,
-          hintText: 'Search',
-          hintStyle: TextStyle(color: tdGrey),
-        ),
       ),
     );
   }
