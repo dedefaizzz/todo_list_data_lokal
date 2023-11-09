@@ -143,7 +143,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
     );
   }
 
-  // API get data
+  // sqlite get data
   Future<void> fetchTodo() async {
     final response = await TodoService.fetchTodos();
 
@@ -183,7 +183,7 @@ class _ToDoListPageState extends State<ToDoListPage> {
     fetchTodo();
   }
 
-  // API untuk Delete
+  // sqlite untuk Delete
   Future<void> deleteById(String id) async {
     // Hapus item menggunakan rest api
     final isSuccess = await TodoService.deleteById(id);

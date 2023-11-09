@@ -1,4 +1,4 @@
-// meng handle semua API call (get, push, put, delete)
+// meng handle semua sqlite call (get, push, put, delete)
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_list/utils/database_helper.dart';
 
