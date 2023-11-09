@@ -16,7 +16,7 @@ void showErrorMessage(
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-// API response reaction
+// Response reaction
 void showSuccessMessage(
   BuildContext context, {
   required String message,
