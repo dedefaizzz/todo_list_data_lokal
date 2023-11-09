@@ -1,48 +1,46 @@
 // meng handle semua API call (get, push, put, delete)
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:sqflite/sqflite.dart';
+import 'package:todo_list/utils/database_helper.dart';
 
 class TodoService {
   static Future<bool> deleteById(String id) async {
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.delete(uri);
-    return response.statusCode == 200;
+    try {
+      Database db = await DatabaseHelper().database;
+      int result = await db.delete('todos', where: 'id = ?', whereArgs: [id]);
+      return result > 0;
+    } catch (e) {
+      return false;
+    }
   }
 
-  static Future<List?> fetchTodos() async {
-    final url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body) as Map;
-      final result = json['items'] as List;
+  static Future<List<Map<String, dynamic>>?> fetchTodos() async {
+    try {
+      Database db = await DatabaseHelper().database;
+      List<Map<String, dynamic>> result = await db.query('todos');
       return result;
-    } else {
+    } catch (e) {
       return null;
     }
   }
 
-  static Future<bool> updateTodo(String id, Map body) async {
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.put(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-    return response.statusCode == 200;
+  static Future<bool> updateTodo(String id, Map<String, dynamic> body) async {
+    try {
+      Database db = await DatabaseHelper().database;
+      int result =
+          await db.update('todos', body, where: 'id = ?', whereArgs: [id]);
+      return result > 0;
+    } catch (e) {
+      return false;
+    }
   }
 
-  static Future<bool> addTodo(Map body) async {
-    final url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-    return response.statusCode == 201;
+  static Future<bool> addTodo(Map<String, dynamic> body) async {
+    try {
+      Database db = await DatabaseHelper().database;
+      await db.insert('todos', body);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
